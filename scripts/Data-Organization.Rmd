@@ -1,0 +1,88 @@
+---
+title: "Data-Organization"
+author: "Anna Talucci"
+date: "1/21/2021"
+output: html_document
+---
+
+# Overview
+
+This script is reliant on
+* `Rproj` and therefore the `wd()`does not have to be set
+* Relative path names "../folder-name/file-name.ext"
+* This script is reliant on the following folders 
+    +"../scripts/" --this houses all scripts written in RMarkdown
+    +"../data/shapfiles/" --this houses shape files
+    +"../figures/
+
+**Data organization** 
+Involve converting to plot level varaibles and some cleaning. Create plot_dis for distance on the transect that removes alpha 'a' and 'b' from -25 plots on BP transect.
+
+
+
+**Calculate total basla area for plots**
+Total Basal area in meteres squared
+
+
+# Pakcages
+```{r}
+library(tidyr)
+library(dplyr)
+library(stringr)
+```
+
+# Functions
+
+```{r}
+numextract <- function(string){ 
+  str_extract(string, "\\-*\\d+\\.*\\d*")
+} 
+
+
+```
+
+# Site info
+
+```{r}
+field_snags = read.csv("../data/original_csv/17Feb2017_Part12_v1_cwd_snag.csv")
+field_soil = read.csv("../data/original_csv/17Feb2017_Part12_v1_ surface_seed.csv")
+```
+
+## Look at data
+```{r}
+head(field_snags)
+head(field_soil)
+```
+```{r}
+unique(field_snags$Plot_ID)
+unique(field_soil$Plot_ID)
+```
+
+```{r}
+nrow(field_snags)
+nrow(field_soil)
+```
+
+# Select columns of interest
+```{r}
+field_snags1 = field_snags %>% dplyr::select(plot:Plot_ID, vis_FE, Fire_id)
+head(field_snags1)
+```
+
+```{r}
+field_soil1 = field_soil %>% dplyr::select(plot:vis_FE, Fire_id:soil.sur, duff.dpth)
+head(field_soil1)
+```
+
+# Merge data frames
+```{r}
+field_plot = merge(field_snags1, field_soil1, by= c("plot", "Plot_ID", "Fire_id"))
+field_plot
+```
+
+
+
+
+```{r eval=FALSE, include=FALSE}
+write.csv(field_plot,"../outputs/field_subset/site_info_uav.csv", row.names = FALSE)
+```
