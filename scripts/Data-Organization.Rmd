@@ -84,5 +84,5 @@ field_plot
 
 
 ```{r eval=FALSE, include=FALSE}
-write.csv(field_plot,"../outputs/field_subset/site_info_uav.csv", row.names = FALSE)
+write.csv(field_plot,"../outputs/field_plot_tree_surface.csv", row.names = FALSE)
 ```
